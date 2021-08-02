@@ -57,7 +57,7 @@ var createScene = function () {
         tree.checkCollisions = true;
     }
 
-    var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("https://playground.babylonjs.com/textures/country.dds", scene);
+    var hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData("textures/country.dds", scene);
     var currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
 
     boxmat = new BABYLON.StandardMaterial("boxmat", scene);
