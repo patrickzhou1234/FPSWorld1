@@ -111,6 +111,28 @@ var createScene = function () {
     for (i=-25;i<50;i+=20) {
         makeTree(i);
     }
+
+    var waterMesh = BABYLON.Mesh.CreateGround("waterMesh", 100, 5, 32, scene, false);
+	var water = new BABYLON.WaterMaterial("water", scene);
+	water.bumpTexture = new BABYLON.Texture("https://playground.babylonjs.com/textures/waterbump.png", scene);
+	water.windForce = -15;
+	water.waveHeight = 0.05;
+	water.windDirection = new BABYLON.Vector2(1, 1);
+	water.waterColor = new BABYLON.Color3(0.1, 0.1, 0.6);
+	water.colorBlendFactor = 0.3;
+	water.bumpHeight = 0.1;
+	water.waveLength = 0.1;
+	water.addToRenderList(currentSkybox);
+	water.addToRenderList(ground);
+	waterMesh.material = water;
+    waterMesh.position.z = 10;
+
+    var bridge = BABYLON.MeshBuilder.CreateTorus("bridge", {diameter:8, thickness:1}, scene);
+    bridge.rotation.x = Math.PI/2;
+    bridge.rotation.z = Math.PI/2;
+    bridge.position.z = 10;
+    bridge.position.x = 10;
+    bridge.checkCollisions = true;
     return scene;
 };
 
@@ -187,6 +209,37 @@ canvas.onclick = function(){
     scene.registerBeforeRender(function () {
        	bullet.position.addInPlace(direction);
     });
+}
+
+window.onkeydown = function(event) {
+    if (event.keyCode == "32") {
+        const frameRate = 10;
+
+        const xSlide = new BABYLON.Animation("xSlide", "position.y", frameRate, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+
+        const keyFrames = []; 
+
+        keyFrames.push({
+            frame: 0,
+            value: 1
+        });
+
+        keyFrames.push({
+            frame: frameRate,
+            value: 4
+        });
+
+        keyFrames.push({
+            frame: 2 * frameRate,
+            value: 1
+        });
+
+        xSlide.setKeys(keyFrames);
+
+        camera.animations.push(xSlide);
+
+        scene.beginAnimation(camera, 0, 2 * frameRate, false);
+    }
 }
 
 const scene = createScene();
